@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EventFormat {
+  ONLINE
+  OFFLINE
+}
+
+enum RegistrationStatus {
+  NEW
+  CONFIRMED
+  CANCELLED
+  ATTENDED
+}
+
+model Article {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  excerpt     String
+  content     String
+  category    String
+  status      PublishStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Event {
+  id                  String              @id @default(cuid())
+  title               String
+  slug                String              @unique
+  excerpt             String
+  description         String
+  program             String
+  format              EventFormat
+  city                String?
+  onlineUrl           String?
+  privateNote         String?
+  startsAt            DateTime
+  endsAt              DateTime?
+  seatsLimit          Int?
+  status              PublishStatus       @default(DRAFT)
+  registrationEnabled Boolean             @default(true)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  registrations       EventRegistration[]
+}
+
+model EventRegistration {
+  id        String             @id @default(cuid())
+  eventId   String
+  event     Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  phone     String
+  email     String?
+  company   String?
+  position  String?
+  comment   String?
+  status    RegistrationStatus @default(NEW)
+  createdAt DateTime           @default(now())
+
+  @@index([eventId])
+}
+
+model Service {
+  id               String        @id @default(cuid())
+  title            String
+  slug             String        @unique
+  shortDescription String
+  fullDescription  String
+  audience         String?
+  includes         String?
+  process          String?
+  result           String?
+  ctaLabel         String        @default("Получить консультацию")
+  order            Int           @default(0)
+  status           PublishStatus @default(DRAFT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model FAQ {
+  id        String        @id @default(cuid())
+  question  String
+  answer    String
+  order     Int           @default(0)
+  status    PublishStatus @default(DRAFT)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model SiteStat {
+  id          String        @id @default(cuid())
+  label       String
+  value       String
+  description String?
+  order       Int           @default(0)
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model TeamMember {
+  id             String        @id @default(cuid())
+  name           String
+  role           String
+  description    String
+  experienceText String?
+  order          Int           @default(0)
+  status         PublishStatus @default(DRAFT)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model SiteSettings {
+  id             String   @id @default("main")
+  phone          String?
+  email          String?
+  whatsapp       String?
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  company   String?
+  comment   String?
+  source    String   @default("contact")
+  createdAt DateTime @default(now())
+}
