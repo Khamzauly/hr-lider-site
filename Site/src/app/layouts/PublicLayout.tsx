@@ -4,6 +4,10 @@ import { Menu, X } from "lucide-react";
 
 export default function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const phoneContacts = [
+    { label: "+7 707 281 70 60", href: "tel:+770****7060" },
+    { label: "+7 701 432 21 11", href: "tel:+770****2111" },
+  ];
 
   const scrollToConsultation = () => {
     const element = document.getElementById("consultation");
@@ -167,7 +171,21 @@ export default function PublicLayout() {
               <div className="font-semibold mb-4">Контакты</div>
               <div className="space-y-2 text-gray-400">
                 <p>Казахстан</p>
-                <p>info@hr-lider.kz</p>
+                {phoneContacts.map((phone) => (
+                  <a
+                    key={phone.href}
+                    href={phone.href}
+                    className="block hover:text-white transition"
+                  >
+                    {phone.label}
+                  </a>
+                ))}
+                <a
+                  href="mailto:info@hr-lider.kz"
+                  className="block hover:text-white transition"
+                >
+                  info@hr-lider.kz
+                </a>
               </div>
             </div>
           </div>

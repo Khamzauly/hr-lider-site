@@ -1,5 +1,10 @@
 import LeadForm from "../components/LeadForm";
 
+const phoneContacts = [
+  { label: "+7 707 281 70 60", href: "tel:+77072817060" },
+  { label: "+7 701 432 21 11", href: "tel:+77014322111" },
+];
+
 export default function Contacts() {
   return (
     <div className="py-12">
@@ -10,6 +15,29 @@ export default function Contacts() {
           кадровое делопроизводство, аудит, обучение кадровиков или подготовка к
           проверке. Мы подскажем подходящий формат работы.
         </p>
+
+        <div className="bg-gray-50 rounded-xl p-6 mb-10 space-y-4">
+          <div>
+            <h2 className="text-2xl font-semibold mb-3">Связаться с нами</h2>
+            <div className="space-y-2 text-lg">
+              {phoneContacts.map((phone) => (
+                <a
+                  key={phone.href}
+                  href={phone.href}
+                  className="block text-blue-600 hover:text-blue-700 transition"
+                >
+                  {phone.label}
+                </a>
+              ))}
+              <a
+                href="mailto:info@hr-lider.kz"
+                className="block text-blue-600 hover:text-blue-700 transition"
+              >
+                info@hr-lider.kz
+              </a>
+            </div>
+          </div>
+        </div>
 
         <LeadForm source="contact" />
       </div>
