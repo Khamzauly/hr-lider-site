@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
+import { normalizePublicContent } from "../lib/content";
 
 interface Article {
   id: string;
@@ -35,7 +36,7 @@ export default function Articles() {
     setLoading(true);
     fetch(url)
       .then((r) => r.json())
-      .then((data) => setArticles(data.items || []))
+      .then((data) => setArticles(normalizePublicContent(data.items || [])))
       .finally(() => setLoading(false));
   }, [category]);
 

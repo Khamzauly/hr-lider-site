@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import LeadForm from "../components/LeadForm";
+import { normalizePublicContent } from "../lib/content";
 
 interface Article {
   id: string;
@@ -21,7 +22,7 @@ export default function ArticleDetail() {
   useEffect(() => {
     fetch(`/api/public/articles/${slug}`)
       .then((r) => r.json())
-      .then((data) => setArticle(data.item))
+      .then((data) => setArticle(normalizePublicContent(data.item)))
       .finally(() => setLoading(false));
   }, [slug]);
 

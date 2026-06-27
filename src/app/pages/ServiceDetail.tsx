@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import LeadForm from "../components/LeadForm";
+import { normalizePublicContent } from "../lib/content";
 
 interface Service {
   id: string;
@@ -24,7 +25,7 @@ export default function ServiceDetail() {
   useEffect(() => {
     fetch(`/api/public/services/${slug}`)
       .then((r) => r.json())
-      .then((data) => setService(data.item))
+      .then((data) => setService(normalizePublicContent(data.item)))
       .finally(() => setLoading(false));
   }, [slug]);
 

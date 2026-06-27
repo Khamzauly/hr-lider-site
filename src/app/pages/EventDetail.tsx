@@ -1,6 +1,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, Calendar, MapPin, Clock } from "lucide-react";
+import { normalizePublicContent } from "../lib/content";
 
 interface Event {
   id: string;
@@ -32,7 +33,7 @@ export default function EventDetail() {
   useEffect(() => {
     fetch(`/api/public/events/${slug}`)
       .then((r) => r.json())
-      .then((data) => setEvent(data.item))
+      .then((data) => setEvent(normalizePublicContent(data.item)))
       .finally(() => setLoading(false));
   }, [slug]);
 

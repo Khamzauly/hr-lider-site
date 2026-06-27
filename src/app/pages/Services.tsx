@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
+import { normalizePublicContent } from "../lib/content";
 
 interface Service {
   id: string;
@@ -17,7 +18,7 @@ export default function Services() {
   useEffect(() => {
     fetch("/api/public/services")
       .then((r) => r.json())
-      .then((data) => setServices(data.items || []))
+      .then((data) => setServices(normalizePublicContent(data.items || [])))
       .finally(() => setLoading(false));
   }, []);
 

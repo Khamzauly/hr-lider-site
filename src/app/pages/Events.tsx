@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { Calendar, ArrowRight } from "lucide-react";
 import LeadForm from "../components/LeadForm";
+import { normalizePublicContent } from "../lib/content";
 
 interface Event {
   id: string;
@@ -34,7 +35,7 @@ export default function Events() {
     setLoading(true);
     fetch(url)
       .then((r) => r.json())
-      .then((data) => setEvents(data.items || []))
+      .then((data) => setEvents(normalizePublicContent(data.items || [])))
       .finally(() => setLoading(false));
   }, [filter]);
 

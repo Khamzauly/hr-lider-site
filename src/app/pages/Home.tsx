@@ -12,6 +12,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import LeadForm from "../components/LeadForm";
+import { normalizePublicContent } from "../lib/content";
 
 interface Service {
   id: string;
@@ -72,11 +73,11 @@ export default function Home() {
       fetch("/api/public/faqs").then((r) => r.json()),
     ])
       .then(([servicesData, eventsData, articlesData, teamData, faqsData]) => {
-        setServices(servicesData.items || []);
-        setEvents(eventsData.items || []);
-        setArticles(articlesData.items || []);
-        setTeam(teamData.items || []);
-        setFaqs(faqsData.items || []);
+        setServices(normalizePublicContent(servicesData.items || []));
+        setEvents(normalizePublicContent(eventsData.items || []));
+        setArticles(normalizePublicContent(articlesData.items || []));
+        setTeam(normalizePublicContent(teamData.items || []));
+        setFaqs(normalizePublicContent(faqsData.items || []));
       })
       .finally(() => setLoading(false));
   }, []);
