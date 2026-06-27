@@ -9,6 +9,7 @@ import {
   CheckCircle,
   ArrowRight,
   Calendar,
+  MessageCircle,
 } from "lucide-react";
 import LeadForm from "../components/LeadForm";
 
@@ -85,34 +86,46 @@ export default function Home() {
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const whatsappUrl = "https://wa.me/77014322111?text=Здравствуйте!%20Хочу%20получить%20консультацию%20HR%20Lider";
+
   return (
     <div>
       <section className="bg-gradient-to-b from-blue-50 to-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Кадровый порядок и обучение для работодателей
+              Обучение согласительных комиссий и кадровый порядок для
+              работодателей Казахстана
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Обучаем согласительные комиссии, кадровиков и HR-специалистов,
-              проводим HR-аудит, сопровождаем кадровое делопроизводство и
-              помогаем компаниям подготовиться к проверкам и трудовым спорам.
+              Обучаем членов согласительных комиссий, кадровиков и
+              HR-специалистов. Проводим HR-аудит, проверяем кадровые документы,
+              помогаем снизить риски трудовых споров и проверок.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={scrollToConsultation}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+              <Link
+                to="/services/obuchenie-soglasitelnoi-komissii"
                 className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition inline-flex items-center justify-center gap-2"
               >
-                Получить консультацию
+                Получить программу обучения
                 <ArrowRight size={20} />
-              </button>
+              </Link>
               <Link
-                to="/events"
+                to="/services/hr-audit"
                 className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition inline-flex items-center justify-center gap-2"
               >
-                Смотреть мероприятия
-                <Calendar size={20} />
+                Заказать HR-аудит
+                <CheckCircle size={20} />
               </Link>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="border-2 border-green-600 text-green-700 px-8 py-3 rounded-lg hover:bg-green-50 transition inline-flex items-center justify-center gap-2"
+              >
+                Написать в WhatsApp
+                <MessageCircle size={20} />
+              </a>
             </div>
           </div>
         </div>
@@ -228,17 +241,47 @@ export default function Home() {
           {loading ? (
             <div className="text-center py-12">Загрузка...</div>
           ) : events.length === 0 ? (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
-              <p className="text-gray-700">
-                Сейчас нет опубликованных мероприятий. Оставьте заявку, и мы
-                сообщим о ближайшем наборе.
-              </p>
-              <button
-                onClick={scrollToConsultation}
-                className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                Оставить заявку
-              </button>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-8">
+              <div className="max-w-3xl mx-auto text-center">
+                <h3 className="text-2xl font-semibold mb-3">
+                  Ближайшая открытая дата формируется
+                </h3>
+                <p className="text-gray-700 mb-6">
+                  Оставьте заявку, предложим дату открытой группы или проведём
+                  корпоративное обучение для вашей компании.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white rounded-lg p-4 border">
+                  <div className="font-semibold mb-2">Открытая группа</div>
+                  <p className="text-sm text-gray-600">
+                    Запишем в лист ожидания и сообщим, когда появится ближайшая
+                    дата.
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-4 border">
+                  <div className="font-semibold mb-2">Корпоративное обучение</div>
+                  <p className="text-sm text-gray-600">
+                    Проведём обучение для членов комиссии и HR-команды вашей
+                    компании.
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-4 border">
+                  <div className="font-semibold mb-2">Индивидуальная консультация</div>
+                  <p className="text-sm text-gray-600">
+                    Разберём документы, процедуру работы комиссии и кадровые
+                    риски.
+                  </p>
+                </div>
+              </div>
+              <div className="text-center">
+                <button
+                  onClick={scrollToConsultation}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                >
+                  Оставить заявку
+                </button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

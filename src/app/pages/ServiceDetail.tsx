@@ -48,6 +48,8 @@ export default function ServiceDetail() {
     );
   }
 
+  const isCommissionTraining = service.slug === "obuchenie-soglasitelnoi-komissii";
+
   return (
     <div className="py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -119,6 +121,80 @@ export default function ServiceDetail() {
               className="prose max-w-none"
               dangerouslySetInnerHTML={{ __html: service.result }}
             />
+          </section>
+        )}
+
+        {isCommissionTraining && (
+          <section className="mb-8 space-y-8">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h2 className="text-2xl font-semibold mb-4">
+                Что получает компания
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  "Программа по трудовому законодательству РК и работе комиссии",
+                  "Практические кейсы по индивидуальным трудовым спорам",
+                  "Разбор документов: положение, протокол, решение, уведомления",
+                  "Сертификат или подтверждение прохождения обучения",
+                ].map((item) => (
+                  <div key={item} className="flex gap-3">
+                    <CheckCircle className="text-blue-600 flex-shrink-0 mt-1" size={18} />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Форматы обучения</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="border rounded-lg p-4">
+                  <div className="font-semibold mb-2">Онлайн</div>
+                  <p className="text-gray-600 text-sm">
+                    Для компаний из разных городов и филиалов.
+                  </p>
+                </div>
+                <div className="border rounded-lg p-4">
+                  <div className="font-semibold mb-2">Очно</div>
+                  <p className="text-gray-600 text-sm">
+                    Для команд, которым нужен живой разбор вопросов.
+                  </p>
+                </div>
+                <div className="border rounded-lg p-4">
+                  <div className="font-semibold mb-2">Корпоративно</div>
+                  <p className="text-gray-600 text-sm">
+                    Адаптируем программу под документы и риски компании.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Частые вопросы</h2>
+              <div className="space-y-4">
+                <div className="border rounded-lg p-4">
+                  <div className="font-semibold mb-1">Кто должен обучаться?</div>
+                  <p className="text-gray-600">
+                    Члены согласительной комиссии со стороны работодателя и работников,
+                    а также HR, кадровики и юристы, которые сопровождают процедуру.
+                  </p>
+                </div>
+                <div className="border rounded-lg p-4">
+                  <div className="font-semibold mb-1">Как часто проходить обучение?</div>
+                  <p className="text-gray-600">
+                    Для членов комиссии важно регулярно обновлять знания по трудовому
+                    законодательству, процедурам и переговорам.
+                  </p>
+                </div>
+                <div className="border rounded-lg p-4">
+                  <div className="font-semibold mb-1">Можно ли провести курс для одной компании?</div>
+                  <p className="text-gray-600">
+                    Да, корпоративный формат подходит, если нужно обучить комиссию,
+                    HR-команду и руководителей на внутренних примерах.
+                  </p>
+                </div>
+              </div>
+            </div>
           </section>
         )}
 

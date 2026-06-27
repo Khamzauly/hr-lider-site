@@ -1,9 +1,14 @@
-'use client';
+import SpaApp from './SpaApp';
 
-import dynamic from 'next/dynamic';
-
-const App = dynamic(() => import('../src/app/App'), { ssr: false });
+export const metadata = {
+  title: 'HR Lider - обучение согласительных комиссий, HR-аудит и кадровый аутсорсинг в Казахстане',
+  description:
+    'Обучаем членов согласительных комиссий, кадровиков и HR-специалистов. Проводим HR-аудит, проверяем кадровые документы и помогаем снизить риски трудовых споров.',
+  alternates: {
+    canonical: '/'
+  }
+};
 
 export default function Page() {
-  return <App />;
+  return <SpaApp />;
 }

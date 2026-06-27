@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, MessageCircle, Phone } from "lucide-react";
 
 export default function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -8,6 +8,7 @@ export default function PublicLayout() {
     { label: "+7 707 281 70 60", href: "tel:+77072817060" },
     { label: "+7 701 432 21 11", href: "tel:+77014322111" },
   ];
+  const whatsappHref = "https://wa.me/77014322111?text=Здравствуйте!%20Хочу%20получить%20консультацию%20HR%20Lider";
 
   const scrollToConsultation = () => {
     const element = document.getElementById("consultation");
@@ -47,6 +48,22 @@ export default function PublicLayout() {
               <Link to="/contacts" className="hover:text-blue-600 transition">
                 Контакты
               </Link>
+              <a
+                href={phoneContacts[1].href}
+                className="hidden lg:inline-flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"
+              >
+                <Phone size={16} />
+                {phoneContacts[1].label}
+              </a>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                className="hidden lg:inline-flex items-center gap-2 text-sm text-green-700 hover:text-green-800 transition"
+              >
+                <MessageCircle size={16} />
+                WhatsApp
+              </a>
               <button
                 onClick={scrollToConsultation}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
@@ -107,6 +124,24 @@ export default function PublicLayout() {
               >
                 Контакты
               </Link>
+              <a
+                href={phoneContacts[1].href}
+                className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Phone size={18} />
+                {phoneContacts[1].label}
+              </a>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 text-green-700 hover:text-green-800 transition"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <MessageCircle size={18} />
+                Написать в WhatsApp
+              </a>
               <button
                 onClick={scrollToConsultation}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition w-full"
@@ -204,6 +239,16 @@ export default function PublicLayout() {
           </div>
         </div>
       </footer>
+
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Написать HR Lider в WhatsApp"
+        className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-600 text-white shadow-lg transition hover:bg-green-700 md:hidden"
+      >
+        <MessageCircle size={26} />
+      </a>
     </div>
   );
 }

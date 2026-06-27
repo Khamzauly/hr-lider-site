@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { Calendar, ArrowRight } from "lucide-react";
+import LeadForm from "../components/LeadForm";
 
 interface Event {
   id: string;
@@ -111,10 +112,39 @@ export default function Events() {
         {loading ? (
           <div className="text-center py-12">Загрузка...</div>
         ) : events.length === 0 ? (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
-            <p className="text-gray-700">
-              Нет мероприятий по выбранному фильтру.
-            </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-8">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-2xl font-semibold mb-3">
+                Ближайшая открытая дата формируется
+              </h2>
+              <p className="text-gray-700">
+                Оставьте заявку, предложим дату открытой группы или проведём
+                корпоративное обучение для вашей компании.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="font-semibold mb-2">Открытая группа</div>
+                <p className="text-sm text-gray-600">
+                  Запишем в лист ожидания и сообщим о ближайшем наборе.
+                </p>
+              </div>
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="font-semibold mb-2">Корпоративное обучение</div>
+                <p className="text-sm text-gray-600">
+                  Проведём курс для сотрудников компании, комиссии и HR-команды.
+                </p>
+              </div>
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="font-semibold mb-2">Индивидуальная консультация</div>
+                <p className="text-sm text-gray-600">
+                  Разберём документы, вопросы комиссии и кадровые риски.
+                </p>
+              </div>
+            </div>
+            <div className="max-w-2xl mx-auto">
+              <LeadForm source="events_waitlist" />
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

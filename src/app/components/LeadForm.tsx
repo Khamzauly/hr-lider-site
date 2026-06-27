@@ -40,7 +40,7 @@ export default function LeadForm({ source }: LeadFormProps) {
     return (
       <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
         <p className="text-green-800 font-semibold">
-          Спасибо! Мы получили вашу заявку и свяжемся с вами в ближайшее время.
+          Спасибо! Мы получили заявку, отправим программу и предложим подходящий формат или дату.
         </p>
       </div>
     );
