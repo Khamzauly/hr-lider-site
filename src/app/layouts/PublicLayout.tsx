@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router";
 import { useState } from "react";
 import { Menu, X, MessageCircle, Phone } from "lucide-react";
+import { trackContactClick } from "../lib/analytics.js";
 
 export default function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,6 +51,7 @@ export default function PublicLayout() {
               </Link>
               <a
                 href={phoneContacts[1].href}
+                onClick={() => trackContactClick("phone", "header")}
                 className="hidden lg:inline-flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"
               >
                 <Phone size={16} />
@@ -59,6 +61,7 @@ export default function PublicLayout() {
                 href={whatsappHref}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackContactClick("whatsapp", "header")}
                 className="hidden lg:inline-flex items-center gap-2 text-sm text-green-700 hover:text-green-800 transition"
               >
                 <MessageCircle size={16} />
@@ -127,7 +130,10 @@ export default function PublicLayout() {
               <a
                 href={phoneContacts[1].href}
                 className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  trackContactClick("phone", "mobile_menu");
+                  setMobileMenuOpen(false);
+                }}
               >
                 <Phone size={18} />
                 {phoneContacts[1].label}
@@ -137,7 +143,10 @@ export default function PublicLayout() {
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-green-700 hover:text-green-800 transition"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  trackContactClick("whatsapp", "mobile_menu");
+                  setMobileMenuOpen(false);
+                }}
               >
                 <MessageCircle size={18} />
                 Написать в WhatsApp
@@ -220,6 +229,7 @@ export default function PublicLayout() {
                   <a
                     key={phone.href}
                     href={phone.href}
+                    onClick={() => trackContactClick("phone", "footer")}
                     className="block hover:text-white transition"
                   >
                     {phone.label}
@@ -227,6 +237,7 @@ export default function PublicLayout() {
                 ))}
                 <a
                   href="mailto:info@hr-lider.kz"
+                  onClick={() => trackContactClick("email", "footer")}
                   className="block hover:text-white transition"
                 >
                   info@hr-lider.kz
@@ -245,6 +256,7 @@ export default function PublicLayout() {
         target="_blank"
         rel="noreferrer"
         aria-label="Написать HR Lider в WhatsApp"
+        onClick={() => trackContactClick("whatsapp", "floating")}
         className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-600 text-white shadow-lg transition hover:bg-green-700 md:hidden"
       >
         <MessageCircle size={26} />

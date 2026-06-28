@@ -12,6 +12,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import LeadForm from "../components/LeadForm";
+import { trackContactClick } from "../lib/analytics.js";
 import { normalizePublicContent } from "../lib/content";
 
 interface Service {
@@ -122,6 +123,7 @@ export default function Home() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackContactClick("whatsapp", "home_hero")}
                 className="border-2 border-green-600 text-green-700 px-8 py-3 rounded-lg hover:bg-green-50 transition inline-flex items-center justify-center gap-2"
               >
                 Написать в WhatsApp

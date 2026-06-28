@@ -1,6 +1,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, Calendar, MapPin, Clock } from "lucide-react";
+import { trackEventRegistration } from "../lib/analytics.js";
 import { normalizePublicContent } from "../lib/content";
 
 interface Event {
@@ -52,6 +53,7 @@ export default function EventDetail() {
 
       if (!response.ok) throw new Error("Ошибка регистрации");
 
+      trackEventRegistration(event.slug);
       setFormStatus("success");
       setFormData({
         name: "",

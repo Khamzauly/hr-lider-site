@@ -1,6 +1,6 @@
 import { fail, ok, readJson } from '../../../../../lib/http.js';
 import { prisma } from '../../../../../lib/prisma.js';
-import { sendTelegramMessage } from '../../../../../lib/telegram.js';
+import { safeSendTelegramMessage, escapeMarkdown } from '../../../../../lib/telegram.js';
 import {
   cleanOptionalString,
   cleanString,
@@ -10,8 +10,9 @@ import {
 
 export async function POST(req, { params }) {
   try {
+    const resolvedParams = await params;
     const event = await prisma.event.findFirst({
-      where: { id: params.id, status: 'PUBLISHED' },
+      where: { id: resolvedParams.id, status: 'PUBLISHED' },
       include: { _count: { select: { registrations: true } } }
     });
 
@@ -38,12 +39,12 @@ export async function POST(req, { params }) {
       }
     });
 
-    await sendTelegramMessage(
-      `🎓 *Регистрация на мероприятие HR Lider*\n\n📌 *Мероприятие:* ${event.title}\n👤 *Имя:* ${registration.name}\n📞 *Телефон:* ${registration.phone}` +
-        `${registration.email ? `\n✉️ *Email:* ${registration.email}` : ''}` +
-        `${registration.company ? `\n🏢 *Компания:* ${registration.company}` : ''}` +
-        `${registration.position ? `\n💼 *Должность:* ${registration.position}` : ''}` +
-        `${registration.comment ? `\n💬 *Комментарий:* ${registration.comment}` : ''}`
+    await safeSendTelegramMessage(
+      `🎓 *Регистрация на мероприятие HR Lider*\n\n📌 *Мероприятие:* ${escapeMarkdown(event.title)}\n👤 *Имя:* ${escapeMarkdown(registration.name)}\n📞 *Телефон:* ${escapeMarkdown(registration.phone)}` +
+        `${registration.email ? `\n✉️ *Email:* ${escapeMarkdown(registration.email)}` : ''}` +
+        `${registration.company ? `\n🏢 *Компания:* ${escapeMarkdown(registration.company)}` : ''}` +
+        `${registration.position ? `\n💼 *Должность:* ${escapeMarkdown(registration.position)}` : ''}` +
+        `${registration.comment ? `\n💬 *Комментарий:* ${escapeMarkdown(registration.comment)}` : ''}`
     );
 
     return ok({

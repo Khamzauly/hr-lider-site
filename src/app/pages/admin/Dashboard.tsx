@@ -1,4 +1,4 @@
-import { FileText, Calendar, Users, Briefcase } from "lucide-react";
+import { FileText, Calendar, Users, Briefcase, MessageSquare } from "lucide-react";
 import { Link } from "react-router";
 
 export default function AdminDashboard() {
@@ -6,7 +6,7 @@ export default function AdminDashboard() {
     <div>
       <h1 className="text-3xl font-bold mb-8">Добро пожаловать в админку</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <Link
           to="/admin/articles"
           className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
@@ -30,6 +30,14 @@ export default function AdminDashboard() {
           <Users className="text-blue-600 mb-2" size={32} />
           <h3 className="font-semibold text-lg">Регистрации</h3>
           <p className="text-gray-600">Заявки на мероприятия</p>
+        </Link>
+        <Link
+          to="/admin/leads"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
+        >
+          <MessageSquare className="text-blue-600 mb-2" size={32} />
+          <h3 className="font-semibold text-lg">Заявки</h3>
+          <p className="text-gray-600">Заявки с форм сайта</p>
         </Link>
         <Link
           to="/admin/services"

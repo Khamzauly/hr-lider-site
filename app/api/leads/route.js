@@ -1,6 +1,6 @@
 import { fail, ok, readJson } from '../../../lib/http.js';
 import { prisma } from '../../../lib/prisma.js';
-import { sendTelegramMessage } from '../../../lib/telegram.js';
+import { safeSendTelegramMessage, escapeMarkdown } from '../../../lib/telegram.js';
 import { cleanOptionalString, cleanString, validatePhone } from '../../../lib/validation.js';
 
 export async function POST(req) {
@@ -20,10 +20,10 @@ export async function POST(req) {
       }
     });
 
-    await sendTelegramMessage(
-      `📋 *Новая заявка HR Lider*\n\n👤 *Имя:* ${lead.name}\n📞 *Телефон:* ${lead.phone}` +
-        `${lead.company ? `\n🏢 *Компания:* ${lead.company}` : ''}` +
-        `${lead.comment ? `\n💬 *Комментарий:* ${lead.comment}` : ''}`
+    await safeSendTelegramMessage(
+      `📋 *Новая заявка HR Lider*\n\n👤 *Имя:* ${escapeMarkdown(lead.name)}\n📞 *Телефон:* ${escapeMarkdown(lead.phone)}` +
+        `${lead.company ? `\n🏢 *Компания:* ${escapeMarkdown(lead.company)}` : ''}` +
+        `${lead.comment ? `\n💬 *Комментарий:* ${escapeMarkdown(lead.comment)}` : ''}`
     );
 
     return ok({ item: lead });

@@ -1,4 +1,6 @@
 import '../src/styles/index.css';
+import AnalyticsScripts from './AnalyticsScripts';
+import { buildOrganizationJsonLd } from './lib/structured-data.js';
 
 const siteUrl = 'https://www.hr-lider.kz';
 
@@ -42,21 +44,13 @@ export const metadata = {
   ]
 };
 
-const organizationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'HR Lider',
-  url: siteUrl,
-  email: 'info@hr-lider.kz',
-  areaServed: 'KZ',
-  logo: `${siteUrl}/images/hr-lider-main-logo.png`,
-  sameAs: []
-};
+const organizationJsonLd = buildOrganizationJsonLd(siteUrl);
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <body>
+        <AnalyticsScripts />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

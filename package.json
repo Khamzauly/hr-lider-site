@@ -11,7 +11,8 @@
     "build:vite": "vite build",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:seed": "node prisma/seed.js"
+    "db:seed": "node prisma/seed.js",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import { trackLeadSubmit } from "../lib/analytics.js";
 
 interface LeadFormProps {
   source: string;
@@ -28,6 +29,7 @@ export default function LeadForm({ source }: LeadFormProps) {
 
       if (!response.ok) throw new Error("Ошибка отправки");
 
+      trackLeadSubmit(source);
       setStatus("success");
       setFormData({ name: "", phone: "", company: "", comment: "" });
     } catch (error) {

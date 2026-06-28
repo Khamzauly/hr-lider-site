@@ -35,6 +35,7 @@ TG_TOKEN=""
 CHAT_ID=""
 BLOB_READ_WRITE_TOKEN=""
 NEXT_PUBLIC_SITE_URL="https://your-domain.kz"
+NEXT_PUBLIC_GA_MEASUREMENT_ID="" # optional, GA4 Measurement ID, e.g. G-XXXXXXXXXX
 ```
 
 ## 4. Build Settings
