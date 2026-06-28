@@ -1,11 +1,13 @@
 import { fail, ok, readJson } from '../../../lib/http.js';
 import { prisma } from '../../../lib/prisma.js';
 import { safeSendTelegramMessage, escapeMarkdown } from '../../../lib/telegram.js';
-import { cleanOptionalString, cleanString, validatePhone } from '../../../lib/validation.js';
+import { cleanOptionalString, cleanString, isSpamTrapFilled, validatePhone } from '../../../lib/validation.js';
 
 export async function POST(req) {
   try {
     const body = await readJson(req);
+    if (isSpamTrapFilled(body)) return ok({ skipped: true });
+
     const name = cleanString(body.name, 120);
     const phone = validatePhone(body.phone);
     if (!name || name.length < 2) return fail('name is required');

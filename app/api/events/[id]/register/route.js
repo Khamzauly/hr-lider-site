@@ -2,6 +2,7 @@ import { fail, ok, readJson } from '../../../../../lib/http.js';
 import { prisma } from '../../../../../lib/prisma.js';
 import { safeSendTelegramMessage, escapeMarkdown } from '../../../../../lib/telegram.js';
 import {
+  isSpamTrapFilled,
   cleanOptionalString,
   cleanString,
   validateEmail,
@@ -11,6 +12,9 @@ import {
 export async function POST(req, { params }) {
   try {
     const resolvedParams = await params;
+    const body = await readJson(req);
+    if (isSpamTrapFilled(body)) return ok({ skipped: true });
+
     const event = await prisma.event.findFirst({
       where: { id: resolvedParams.id, status: 'PUBLISHED' },
       include: { _count: { select: { registrations: true } } }
@@ -22,7 +26,6 @@ export async function POST(req, { params }) {
       return fail('No seats available', 409);
     }
 
-    const body = await readJson(req);
     const name = cleanString(body.name, 120);
     const phone = validatePhone(body.phone);
     if (!name || name.length < 2) return fail('name is required');

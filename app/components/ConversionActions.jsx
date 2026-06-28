@@ -31,6 +31,14 @@ export function TrackedContactLink({ href, method, location = 'unknown', classNa
   );
 }
 
+function ConsentNotice() {
+  return (
+    <p className="text-xs leading-relaxed text-gray-500">
+      Нажимая кнопку, вы соглашаетесь на обработку контактных данных для ответа на заявку.
+    </p>
+  );
+}
+
 export function EventRegistrationForm({ eventId, eventSlug }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -39,6 +47,7 @@ export function EventRegistrationForm({ eventId, eventSlug }) {
     company: '',
     position: '',
     comment: '',
+    website: '',
   });
   const [status, setStatus] = useState('idle');
 
@@ -57,7 +66,7 @@ export function EventRegistrationForm({ eventId, eventSlug }) {
 
       trackEvent('event_registration_submit', { event_slug: eventSlug });
       setStatus('success');
-      setFormData({ name: '', phone: '', email: '', company: '', position: '', comment: '' });
+      setFormData({ name: '', phone: '', email: '', company: '', position: '', comment: '', website: '' });
     } catch (_error) {
       setStatus('error');
     }
@@ -75,6 +84,18 @@ export function EventRegistrationForm({ eventId, eventSlug }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border bg-white p-6">
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor={`event-${eventSlug}-website`}>Сайт</label>
+        <input
+          id={`event-${eventSlug}-website`}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={formData.website}
+          onChange={(inputEvent) => setFormData({ ...formData, website: inputEvent.target.value })}
+        />
+      </div>
       {[
         ['name', 'Имя', 'text', true, 'name'],
         ['phone', 'Телефон', 'tel', true, 'tel'],
@@ -117,6 +138,8 @@ export function EventRegistrationForm({ eventId, eventSlug }) {
         </div>
       )}
 
+      <ConsentNotice />
+
       <button
         type="submit"
         disabled={status === 'loading'}
@@ -134,6 +157,7 @@ export default function LeadFormClient({ source = 'site' }) {
     phone: '',
     company: '',
     comment: '',
+    website: '',
   });
   const [status, setStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -154,7 +178,7 @@ export default function LeadFormClient({ source = 'site' }) {
 
       trackEvent('lead_submit', { source });
       setStatus('success');
-      setFormData({ name: '', phone: '', company: '', comment: '' });
+      setFormData({ name: '', phone: '', company: '', comment: '', website: '' });
     } catch (_error) {
       setStatus('error');
       setErrorMessage('Не удалось отправить заявку. Попробуйте позже или напишите в WhatsApp.');
@@ -173,6 +197,18 @@ export default function LeadFormClient({ source = 'site' }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border bg-white p-6">
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor={`${source}-website`}>Сайт</label>
+        <input
+          id={`${source}-website`}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={formData.website}
+          onChange={(event) => setFormData({ ...formData, website: event.target.value })}
+        />
+      </div>
       <div>
         <label className="mb-1 block text-sm font-medium" htmlFor={`${source}-name`}>
           Имя <span className="text-red-500">*</span>
@@ -235,6 +271,8 @@ export default function LeadFormClient({ source = 'site' }) {
           {errorMessage}
         </div>
       )}
+
+      <ConsentNotice />
 
       <button
         type="submit"
