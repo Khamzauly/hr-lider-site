@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '../../lib/prisma.js';
 import { stripHtml } from '../lib/structured-data.js';
+import { commissionTrainingFaqs } from '../lib/public-content.js';
 import LeadFormClient, { EventRegistrationForm, TrackedContactLink } from './ConversionActions.jsx';
 
 const DEFAULT_PHONE = '+7 701 432 21 11';
@@ -401,6 +402,22 @@ function FaqList({ faqs }) {
   );
 }
 
+function CommissionTrainingFaq() {
+  return (
+    <section className="mt-10 rounded-xl border bg-white p-6">
+      <h2 className="text-2xl font-semibold">Частые вопросы по обучению согласительной комиссии</h2>
+      <div className="mt-5 space-y-4">
+        {commissionTrainingFaqs.map((faq) => (
+          <details key={faq.question} className="rounded-lg border bg-gray-50 p-4">
+            <summary className="cursor-pointer font-semibold text-gray-950">{faq.question}</summary>
+            <p className="mt-3 text-gray-700">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export async function HomePage() {
   const [settings, services, events, articles, faqs, stats, team] = await Promise.all([
     getSiteSettings(),
@@ -589,6 +606,8 @@ export async function ServiceDetailPage({ slug }) {
               </div>
             </section>
           )}
+
+          {isCommissionTraining && <CommissionTrainingFaq />}
         </article>
 
         <Section className="bg-gray-50" title="Другие услуги HR Lider">

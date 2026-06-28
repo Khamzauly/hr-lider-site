@@ -1,6 +1,7 @@
 import SpaApp from '../SpaApp';
 import { prisma } from '../../lib/prisma.js';
 import { PublicRoutePage } from '../components/PublicPages.jsx';
+import { commissionTrainingFaqs } from '../lib/public-content.js';
 import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
@@ -14,24 +15,6 @@ import {
 const siteUrl = 'https://www.hr-lider.kz';
 
 export const dynamic = 'force-dynamic';
-
-const commissionTrainingFaqs = [
-  {
-    question: 'Кто должен проходить обучение согласительной комиссии?',
-    answer:
-      'Обучение полезно членам согласительной комиссии со стороны работодателя и работников, а также HR, кадровикам и юристам, которые сопровождают индивидуальные трудовые споры.',
-  },
-  {
-    question: 'Как часто нужно обновлять знания членов комиссии?',
-    answer:
-      'Знания важно обновлять регулярно, особенно после изменений в трудовом законодательстве, внутренних процедурах компании или состава согласительной комиссии.',
-  },
-  {
-    question: 'Можно ли провести корпоративное обучение для одной компании?',
-    answer:
-      'Да, корпоративный формат подходит, если нужно обучить комиссию, HR-команду и руководителей на внутренних документах, вопросах и типовых ситуациях компании.',
-  },
-];
 
 function isCommissionTrainingPath(path) {
   return path === 'services/obuchenie-soglasitelnoi-komissii';

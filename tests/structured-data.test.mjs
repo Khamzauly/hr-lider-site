@@ -24,6 +24,8 @@ test('buildOrganizationJsonLd describes HR Lider and website search target', () 
   assert.equal(graph['@context'], 'https://schema.org');
   assert.deepEqual(graph['@graph'][0]['@type'], ['Organization', 'ProfessionalService', 'LocalBusiness']);
   assert.equal(graph['@graph'][0].url, siteUrl);
+  assert.match(graph['@graph'][0].telephone, /^\+7\d{10}$/);
+  assert.equal(graph['@graph'][0].contactPoint.telephone, graph['@graph'][0].telephone);
   assert.equal(graph['@graph'][0].address.addressCountry, 'KZ');
   assert.equal(graph['@graph'][1]['@type'], 'WebSite');
 });
