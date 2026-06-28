@@ -11,6 +11,7 @@ export default function LeadForm({ source }: LeadFormProps) {
     phone: "",
     company: "",
     comment: "",
+    website: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,7 +32,7 @@ export default function LeadForm({ source }: LeadFormProps) {
 
       trackLeadSubmit(source);
       setStatus("success");
-      setFormData({ name: "", phone: "", company: "", comment: "" });
+      setFormData({ name: "", phone: "", company: "", comment: "", website: "" });
     } catch (error) {
       setStatus("error");
       setErrorMessage("Не удалось отправить заявку. Попробуйте позже.");
@@ -50,6 +51,16 @@ export default function LeadForm({ source }: LeadFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg border space-y-4">
+      <input
+        type="text"
+        name="website"
+        value={formData.website}
+        onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
       <div>
         <label className="block text-sm font-medium mb-1">
           Имя <span className="text-red-500">*</span>
@@ -97,6 +108,9 @@ export default function LeadForm({ source }: LeadFormProps) {
           {errorMessage}
         </div>
       )}
+      <p className="text-xs text-gray-500">
+        Нажимая кнопку, вы соглашаетесь на обработку контактных данных для ответа на заявку.
+      </p>
       <button
         type="submit"
         disabled={status === "loading"}

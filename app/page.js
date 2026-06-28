@@ -1,6 +1,6 @@
 import { prisma } from '../lib/prisma.js';
 import { buildFaqPageJsonLd } from './lib/structured-data.js';
-import { HomePage } from './components/PublicPages.jsx';
+import SpaApp from './SpaApp';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +38,7 @@ export default async function Page() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
-      <HomePage />
+      <SpaApp />
     </>
   );
 }
