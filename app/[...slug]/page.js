@@ -1,5 +1,6 @@
 import SpaApp from '../SpaApp';
 import { prisma } from '../../lib/prisma.js';
+import { PublicRoutePage } from '../components/PublicPages.jsx';
 import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
@@ -11,6 +12,8 @@ import {
 } from '../lib/structured-data.js';
 
 const siteUrl = 'https://www.hr-lider.kz';
+
+export const dynamic = 'force-dynamic';
 
 const commissionTrainingFaqs = [
   {
@@ -252,6 +255,10 @@ export default async function SpaRoute({ params }) {
   const path = pathFromParams(resolvedParams);
   const jsonLd = await buildPageJsonLd(path);
 
+  if (path === 'admin' || path.startsWith('admin/')) {
+    return <SpaApp />;
+  }
+
   return (
     <>
       {jsonLd.map((item, index) => (
@@ -261,7 +268,7 @@ export default async function SpaRoute({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
         />
       ))}
-      <SpaApp />
+      <PublicRoutePage path={path} />
     </>
   );
 }
