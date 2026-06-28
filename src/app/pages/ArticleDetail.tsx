@@ -14,6 +14,24 @@ interface Article {
   publishedAt: string;
 }
 
+const recommendedServices = [
+  {
+    title: "Обучение согласительной комиссии",
+    href: "/services/obuchenie-soglasitelnoi-komissii",
+    description: "Курс для членов комиссии, HR и кадровиков по трудовым спорам и документам.",
+  },
+  {
+    title: "HR-аудит",
+    href: "/services/hr-audit",
+    description: "Проверка кадровых документов, процедур и рисков перед спором или проверкой.",
+  },
+  {
+    title: "Кадровый аутсорсинг",
+    href: "/services/kadrovyj-autsorsing",
+    description: "Регулярное сопровождение кадровых документов, сроков и процессов.",
+  },
+];
+
 export default function ArticleDetail() {
   const { slug } = useParams();
   const [article, setArticle] = useState<Article | null>(null);
@@ -73,6 +91,22 @@ export default function ArticleDetail() {
           className="prose max-w-none mb-12"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
+
+        <section className="bg-gray-50 border rounded-lg p-6 mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Услуги по теме статьи</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {recommendedServices.map((service) => (
+              <Link
+                key={service.href}
+                to={service.href}
+                className="bg-white border rounded-lg p-4 hover:shadow-md transition"
+              >
+                <div className="font-semibold text-blue-700 mb-2">{service.title}</div>
+                <p className="text-sm text-gray-600">{service.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <section className="bg-blue-50 border border-blue-200 rounded-lg p-8">
           <h2 className="text-2xl font-semibold mb-6 text-center">

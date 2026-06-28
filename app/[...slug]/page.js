@@ -3,12 +3,41 @@ import { prisma } from '../../lib/prisma.js';
 import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
+  buildCourseJsonLd,
   buildEventJsonLd,
+  buildFaqPageJsonLd,
   buildServiceJsonLd,
   stripHtml,
 } from '../lib/structured-data.js';
 
 const siteUrl = 'https://www.hr-lider.kz';
+
+const commissionTrainingFaqs = [
+  {
+    question: 'Кто должен проходить обучение согласительной комиссии?',
+    answer:
+      'Обучение полезно членам согласительной комиссии со стороны работодателя и работников, а также HR, кадровикам и юристам, которые сопровождают индивидуальные трудовые споры.',
+  },
+  {
+    question: 'Как часто нужно обновлять знания членов комиссии?',
+    answer:
+      'Знания важно обновлять регулярно, особенно после изменений в трудовом законодательстве, внутренних процедурах компании или состава согласительной комиссии.',
+  },
+  {
+    question: 'Можно ли провести корпоративное обучение для одной компании?',
+    answer:
+      'Да, корпоративный формат подходит, если нужно обучить комиссию, HR-команду и руководителей на внутренних документах, вопросах и типовых ситуациях компании.',
+  },
+];
+
+function isCommissionTrainingPath(path) {
+  return path === 'services/obuchenie-soglasitelnoi-komissii';
+}
+
+function isCourseLike(record) {
+  const text = `${record.item.title || ''} ${record.item.shortDescription || ''} ${record.item.excerpt || ''}`.toLowerCase();
+  return text.includes('обуч') || text.includes('согласительн');
+}
 
 const titlesByPath = {
   services: {
@@ -120,18 +149,41 @@ function titleFromRecord(record) {
   return `${title} - HR Lider`;
 }
 
-function jsonLdFromRecord(record) {
-  if (record.type === 'service') return buildServiceJsonLd(siteUrl, record.item);
-  if (record.type === 'article') return buildArticleJsonLd(siteUrl, record.item);
-  if (record.type === 'event') return buildEventJsonLd(siteUrl, record.item);
-  return null;
+function jsonLdFromRecord(record, path) {
+  if (record.type === 'service') {
+    const items = [buildServiceJsonLd(siteUrl, record.item)];
+    if (isCourseLike(record)) {
+      items.push(buildCourseJsonLd(siteUrl, record.item, `/${path}`));
+    }
+    return items;
+  }
+
+  if (record.type === 'article') return [buildArticleJsonLd(siteUrl, record.item)];
+
+  if (record.type === 'event') {
+    const items = [buildEventJsonLd(siteUrl, record.item)];
+    if (isCourseLike(record)) {
+      items.push(buildCourseJsonLd(siteUrl, record.item, `/${path}`));
+    }
+    return items;
+  }
+
+  return [];
 }
 
 async function buildPageJsonLd(path) {
   const data = [buildBreadcrumbJsonLd(siteUrl, `/${path}`)];
   const record = await getPublishedRecord(path);
-  const itemJsonLd = record ? jsonLdFromRecord(record) : null;
-  if (itemJsonLd) data.push(itemJsonLd);
+
+  if (record) {
+    data.push(...jsonLdFromRecord(record, path));
+  }
+
+  if (isCommissionTrainingPath(path)) {
+    const faqJsonLd = buildFaqPageJsonLd(commissionTrainingFaqs);
+    if (faqJsonLd) data.push(faqJsonLd);
+  }
+
   return data;
 }
 

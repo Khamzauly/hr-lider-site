@@ -46,12 +46,25 @@ export function buildOrganizationJsonLd(siteUrl) {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'Organization',
+        '@type': ['Organization', 'ProfessionalService', 'LocalBusiness'],
         name: COMPANY_NAME,
         url: siteUrl,
         email: 'info@hr-lider.kz',
         areaServed: 'KZ',
         logo: `${siteUrl}/images/hr-lider-main-logo.png`,
+        image: `${siteUrl}/images/hr-lider-main-logo.png`,
+        priceRange: '$$',
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'KZ',
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer service',
+          email: 'info@hr-lider.kz',
+          areaServed: 'KZ',
+          availableLanguage: ['ru', 'kk'],
+        },
       },
       {
         '@type': 'WebSite',
@@ -66,6 +79,71 @@ export function buildOrganizationJsonLd(siteUrl) {
       },
     ],
   };
+}
+
+export function buildFaqPageJsonLd(faqs = []) {
+  const mainEntity = faqs
+    .map((faq) => ({
+      question: stripHtml(faq.question),
+      answer: stripHtml(faq.answer),
+    }))
+    .filter((faq) => faq.question && faq.answer)
+    .slice(0, 20)
+    .map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    }));
+
+  if (mainEntity.length === 0) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity,
+  };
+}
+
+export function buildCourseJsonLd(siteUrl, item, path) {
+  const course = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: item.title,
+    description: cleanText(item.shortDescription, item.excerpt, item.fullDescription, item.description),
+    provider: publisher(siteUrl),
+    inLanguage: 'ru-KZ',
+    url: absoluteUrl(siteUrl, path),
+    educationalCredentialAwarded: 'Сертификат или подтверждение прохождения обучения',
+    teaches: [
+      'работа согласительной комиссии',
+      'трудовое законодательство Республики Казахстан',
+      'кадровые документы и процедура рассмотрения трудовых споров',
+    ],
+  };
+
+  if (item.startsAt) {
+    course.hasCourseInstance = {
+      '@type': 'CourseInstance',
+      courseMode: item.format === 'ONLINE' ? 'online' : 'onsite',
+      startDate: item.startsAt,
+      endDate: item.endsAt || item.startsAt,
+      location: item.format === 'ONLINE'
+        ? {
+            '@type': 'VirtualLocation',
+            url: item.onlineUrl || siteUrl,
+          }
+        : {
+            '@type': 'Place',
+            name: item.city || 'Казахстан',
+            address: item.city || 'Казахстан',
+          },
+    };
+  }
+
+  return course;
 }
 
 export function buildBreadcrumbJsonLd(siteUrl, path = '/') {

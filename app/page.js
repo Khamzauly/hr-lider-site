@@ -1,4 +1,8 @@
 import SpaApp from './SpaApp';
+import { prisma } from '../lib/prisma.js';
+import { buildFaqPageJsonLd } from './lib/structured-data.js';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'HR Lider - обучение согласительных комиссий, HR-аудит и кадровый аутсорсинг в Казахстане',
@@ -9,6 +13,32 @@ export const metadata = {
   }
 };
 
-export default function Page() {
-  return <SpaApp />;
+async function getPublishedFaqs() {
+  if (!process.env.DATABASE_URL) return [];
+
+  try {
+    return await prisma.fAQ.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: { order: 'asc' },
+      take: 20,
+    });
+  } catch (_error) {
+    return [];
+  }
+}
+
+export default async function Page() {
+  const faqJsonLd = buildFaqPageJsonLd(await getPublishedFaqs());
+
+  return (
+    <>
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+      <SpaApp />
+    </>
+  );
 }

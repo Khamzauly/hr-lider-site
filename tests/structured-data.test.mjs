@@ -4,7 +4,9 @@ import assert from 'node:assert/strict';
 import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
+  buildCourseJsonLd,
   buildEventJsonLd,
+  buildFaqPageJsonLd,
   buildOrganizationJsonLd,
   buildServiceJsonLd,
   stripHtml,
@@ -20,8 +22,9 @@ test('buildOrganizationJsonLd describes HR Lider and website search target', () 
   const graph = buildOrganizationJsonLd(siteUrl);
 
   assert.equal(graph['@context'], 'https://schema.org');
-  assert.equal(graph['@graph'][0]['@type'], 'Organization');
+  assert.deepEqual(graph['@graph'][0]['@type'], ['Organization', 'ProfessionalService', 'LocalBusiness']);
   assert.equal(graph['@graph'][0].url, siteUrl);
+  assert.equal(graph['@graph'][0].address.addressCountry, 'KZ');
   assert.equal(graph['@graph'][1]['@type'], 'WebSite');
 });
 
@@ -83,4 +86,32 @@ test('buildEventJsonLd maps event fields to Event schema', () => {
   assert.equal(data.eventAttendanceMode, 'https://schema.org/OnlineEventAttendanceMode');
   assert.equal(data.offers.availability, 'https://schema.org/InStock');
   assert.equal(data.url, `${siteUrl}/events/obuchenie-komissii`);
+});
+
+test('buildFaqPageJsonLd maps FAQ items to FAQPage schema', () => {
+  const data = buildFaqPageJsonLd([
+    { question: 'Кто обучается?', answer: '<p>Члены комиссии</p>' },
+    { question: '', answer: 'ignored' },
+  ]);
+
+  assert.equal(data['@type'], 'FAQPage');
+  assert.equal(data.mainEntity.length, 1);
+  assert.equal(data.mainEntity[0]['@type'], 'Question');
+  assert.equal(data.mainEntity[0].acceptedAnswer.text, 'Члены комиссии');
+});
+
+test('buildCourseJsonLd maps training service to Course schema', () => {
+  const data = buildCourseJsonLd(
+    siteUrl,
+    {
+      title: 'Обучение согласительной комиссии',
+      shortDescription: 'Курс для членов комиссии',
+    },
+    '/services/obuchenie-soglasitelnoi-komissii'
+  );
+
+  assert.equal(data['@type'], 'Course');
+  assert.equal(data.name, 'Обучение согласительной комиссии');
+  assert.equal(data.provider.name, 'HR Lider');
+  assert.equal(data.url, `${siteUrl}/services/obuchenie-soglasitelnoi-komissii`);
 });
