@@ -1,6 +1,6 @@
 import { fail, ok, readJson } from '../../../lib/http.js';
 import { prisma } from '../../../lib/prisma.js';
-import { safeSendTelegramMessage, escapeMarkdown } from '../../../lib/telegram.js';
+import { safeSendTelegramMessage, escapeMarkdown, telegramDeliveryStatus } from '../../../lib/telegram.js';
 import { cleanOptionalString, cleanString, isSpamTrapFilled, validatePhone } from '../../../lib/validation.js';
 
 export async function POST(req) {
@@ -22,10 +22,16 @@ export async function POST(req) {
       }
     });
 
-    await safeSendTelegramMessage(
+    const notification = await safeSendTelegramMessage(
       `📋 *Новая заявка HR Lider*\n\n👤 *Имя:* ${escapeMarkdown(lead.name)}\n📞 *Телефон:* ${escapeMarkdown(lead.phone)}` +
         `${lead.company ? `\n🏢 *Компания:* ${escapeMarkdown(lead.company)}` : ''}` +
-        `${lead.comment ? `\n💬 *Комментарий:* ${escapeMarkdown(lead.comment)}` : ''}`
+        `${lead.comment ? `\n💬 *Комментарий:* ${escapeMarkdown(lead.comment)}` : ''}` +
+        `\n📍 *Источник:* ${escapeMarkdown(lead.source)}`
+    );
+
+    console.info(
+      'hr_lider_lead_notification',
+      JSON.stringify({ status: telegramDeliveryStatus(notification), source: lead.source })
     );
 
     return ok({ item: lead });

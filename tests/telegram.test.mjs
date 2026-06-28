@@ -5,6 +5,7 @@ import {
   escapeMarkdown,
   safeSendTelegramMessage,
   sendTelegramMessage,
+  telegramDeliveryStatus,
 } from '../lib/telegram.js';
 
 test('escapeMarkdown escapes Telegram MarkdownV2 control characters', () => {
@@ -48,4 +49,11 @@ test('safeSendTelegramMessage never throws when Telegram fails', async () => {
   if (oldDisabled === undefined) delete process.env.DISABLE_TELEGRAM_NOTIFICATIONS;
   else process.env.DISABLE_TELEGRAM_NOTIFICATIONS = oldDisabled;
   globalThis.fetch = oldFetch;
+});
+
+test('telegramDeliveryStatus summarizes Telegram delivery result without secrets', () => {
+  assert.equal(telegramDeliveryStatus({ ok: true }), 'sent');
+  assert.equal(telegramDeliveryStatus({ skipped: true }), 'skipped');
+  assert.equal(telegramDeliveryStatus({ ok: false, skipped: false }), 'failed');
+  assert.equal(telegramDeliveryStatus(undefined), 'failed');
 });

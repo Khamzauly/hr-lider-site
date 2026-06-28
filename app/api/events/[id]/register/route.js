@@ -1,6 +1,6 @@
 import { fail, ok, readJson } from '../../../../../lib/http.js';
 import { prisma } from '../../../../../lib/prisma.js';
-import { safeSendTelegramMessage, escapeMarkdown } from '../../../../../lib/telegram.js';
+import { safeSendTelegramMessage, escapeMarkdown, telegramDeliveryStatus } from '../../../../../lib/telegram.js';
 import {
   isSpamTrapFilled,
   cleanOptionalString,
@@ -42,12 +42,17 @@ export async function POST(req, { params }) {
       }
     });
 
-    await safeSendTelegramMessage(
+    const notification = await safeSendTelegramMessage(
       `🎓 *Регистрация на мероприятие HR Lider*\n\n📌 *Мероприятие:* ${escapeMarkdown(event.title)}\n👤 *Имя:* ${escapeMarkdown(registration.name)}\n📞 *Телефон:* ${escapeMarkdown(registration.phone)}` +
         `${registration.email ? `\n✉️ *Email:* ${escapeMarkdown(registration.email)}` : ''}` +
         `${registration.company ? `\n🏢 *Компания:* ${escapeMarkdown(registration.company)}` : ''}` +
         `${registration.position ? `\n💼 *Должность:* ${escapeMarkdown(registration.position)}` : ''}` +
         `${registration.comment ? `\n💬 *Комментарий:* ${escapeMarkdown(registration.comment)}` : ''}`
+    );
+
+    console.info(
+      'hr_lider_event_registration_notification',
+      JSON.stringify({ status: telegramDeliveryStatus(notification), eventId: event.id })
     );
 
     return ok({
