@@ -1,14 +1,24 @@
-export function buildGoogleAnalyticsScripts(measurementId) {
-  const id = String(measurementId || '').trim();
-  if (!id) return null;
+function cleanId(value) {
+  return String(value || '').trim();
+}
+
+function uniqueIds(values) {
+  return [...new Set(values.map(cleanId).filter(Boolean))];
+}
+
+export function buildGoogleAnalyticsScripts(measurementId, googleAdsId) {
+  const ids = uniqueIds([measurementId, googleAdsId]);
+  if (!ids.length) return null;
+
+  const configLines = ids.map((id) => `gtag('config', '${id}');`).join('\n');
 
   return {
-    src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`,
+    src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ids[0])}`,
     inline: `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${id}');
+${configLines}
 `.trim(),
   };
 }

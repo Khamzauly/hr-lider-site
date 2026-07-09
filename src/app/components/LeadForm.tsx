@@ -1,5 +1,6 @@
 import { useState, FormEvent } from "react";
 import { trackLeadSubmit } from "../lib/analytics.js";
+import { getAttributionPayload } from "../lib/attribution.js";
 
 interface LeadFormProps {
   source: string;
@@ -22,15 +23,16 @@ export default function LeadForm({ source }: LeadFormProps) {
     setErrorMessage("");
 
     try {
+      const attribution = getAttributionPayload();
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, source }),
+        body: JSON.stringify({ ...formData, source, attribution }),
       });
 
       if (!response.ok) throw new Error("Ошибка отправки");
 
-      trackLeadSubmit(source);
+      trackLeadSubmit(source, attribution);
       setStatus("success");
       setFormData({ name: "", phone: "", company: "", comment: "", website: "" });
     } catch (error) {

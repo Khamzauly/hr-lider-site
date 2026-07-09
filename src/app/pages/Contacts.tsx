@@ -1,5 +1,6 @@
 import LeadForm from "../components/LeadForm";
 import { trackContactClick } from "../lib/analytics.js";
+import { getAttributionPayload } from "../lib/attribution.js";
 
 const phoneContacts = [
   { label: "+7 707 281 70 60", href: "tel:+77072817060" },
@@ -25,7 +26,7 @@ export default function Contacts() {
                 <a
                   key={phone.href}
                   href={phone.href}
-                  onClick={() => trackContactClick("phone", "contacts")}
+                  onClick={() => trackContactClick("phone", "contacts", getAttributionPayload())}
                   className="block text-blue-600 hover:text-blue-700 transition"
                 >
                   {phone.label}
@@ -33,7 +34,7 @@ export default function Contacts() {
               ))}
               <a
                 href="mailto:info@hr-lider.kz"
-                onClick={() => trackContactClick("email", "contacts")}
+                onClick={() => trackContactClick("email", "contacts", getAttributionPayload())}
                 className="block text-blue-600 hover:text-blue-700 transition"
               >
                 info@hr-lider.kz

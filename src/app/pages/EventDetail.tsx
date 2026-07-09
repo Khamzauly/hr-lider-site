@@ -2,6 +2,7 @@ import { useEffect, useState, FormEvent } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, Calendar, MapPin, Clock } from "lucide-react";
 import { trackEventRegistration } from "../lib/analytics.js";
+import { getAttributionPayload } from "../lib/attribution.js";
 import { normalizePublicContent } from "../lib/content";
 
 interface Event {
@@ -45,15 +46,16 @@ export default function EventDetail() {
     setFormStatus("loading");
 
     try {
+      const attribution = getAttributionPayload();
       const response = await fetch(`/api/events/${event.id}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, attribution }),
       });
 
       if (!response.ok) throw new Error("Ошибка регистрации");
 
-      trackEventRegistration(event.slug);
+      trackEventRegistration(event.slug, attribution);
       setFormStatus("success");
       setFormData({
         name: "",

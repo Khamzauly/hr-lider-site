@@ -1,29 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-
-function trackEvent(eventName, params = {}) {
-  if (typeof window === 'undefined') return false;
-
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', eventName, params);
-    return true;
-  }
-
-  if (Array.isArray(window.dataLayer)) {
-    window.dataLayer.push({ event: eventName, ...params });
-    return true;
-  }
-
-  return false;
-}
+import {
+  trackContactClick,
+  trackEventRegistration,
+  trackLeadSubmit,
+} from '../../src/app/lib/analytics.js';
+import { getAttributionPayload } from '../../src/app/lib/attribution.js';
 
 export function TrackedContactLink({ href, method, location = 'unknown', className = '', children, ...props }) {
   return (
     <a
       href={href}
       className={className}
-      onClick={() => trackEvent('contact_click', { method, location })}
+      onClick={() => trackContactClick(method, location, getAttributionPayload())}
       {...props}
     >
       {children}
@@ -56,15 +46,16 @@ export function EventRegistrationForm({ eventId, eventSlug }) {
     setStatus('loading');
 
     try {
+      const attribution = getAttributionPayload();
       const response = await fetch(`/api/events/${eventId}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, attribution }),
       });
 
       if (!response.ok) throw new Error('Event registration failed');
 
-      trackEvent('event_registration_submit', { event_slug: eventSlug });
+      trackEventRegistration(eventSlug, attribution);
       setStatus('success');
       setFormData({ name: '', phone: '', email: '', company: '', position: '', comment: '', website: '' });
     } catch (_error) {
@@ -168,15 +159,16 @@ export default function LeadFormClient({ source = 'site' }) {
     setErrorMessage('');
 
     try {
+      const attribution = getAttributionPayload();
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, source }),
+        body: JSON.stringify({ ...formData, source, attribution }),
       });
 
       if (!response.ok) throw new Error('Lead submit failed');
 
-      trackEvent('lead_submit', { source });
+      trackLeadSubmit(source, attribution);
       setStatus('success');
       setFormData({ name: '', phone: '', company: '', comment: '', website: '' });
     } catch (_error) {

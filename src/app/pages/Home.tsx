@@ -12,7 +12,8 @@ import {
   MessageCircle,
 } from "lucide-react";
 import LeadForm from "../components/LeadForm";
-import { trackContactClick } from "../lib/analytics.js";
+import { trackContactClick, trackCtaClick } from "../lib/analytics.js";
+import { getAttributionPayload } from "../lib/attribution.js";
 import { normalizePublicContent } from "../lib/content";
 
 interface Service {
@@ -107,6 +108,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <Link
                 to="/services/obuchenie-soglasitelnoi-komissii"
+                onClick={() => trackCtaClick("hero_program", "home_hero")}
                 className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition inline-flex items-center justify-center gap-2"
               >
                 Получить программу обучения
@@ -114,6 +116,7 @@ export default function Home() {
               </Link>
               <Link
                 to="/services/hr-audit"
+                onClick={() => trackCtaClick("hero_hr_audit", "home_hero")}
                 className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition inline-flex items-center justify-center gap-2"
               >
                 Заказать HR-аудит
@@ -123,7 +126,7 @@ export default function Home() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => trackContactClick("whatsapp", "home_hero")}
+                onClick={() => trackContactClick("whatsapp", "home_hero", getAttributionPayload())}
                 className="border-2 border-green-600 text-green-700 px-8 py-3 rounded-lg hover:bg-green-50 transition inline-flex items-center justify-center gap-2"
               >
                 Написать в WhatsApp

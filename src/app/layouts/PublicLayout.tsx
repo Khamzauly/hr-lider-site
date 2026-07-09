@@ -1,7 +1,8 @@
 import { Outlet, Link } from "react-router";
 import { useState } from "react";
 import { Menu, X, MessageCircle, Phone } from "lucide-react";
-import { trackContactClick } from "../lib/analytics.js";
+import { trackContactClick, trackCtaClick } from "../lib/analytics.js";
+import { getAttributionPayload } from "../lib/attribution.js";
 
 export default function PublicLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -11,7 +12,8 @@ export default function PublicLayout() {
   ];
   const whatsappHref = "https://wa.me/77014322111?text=Здравствуйте!%20Хочу%20получить%20консультацию%20HR%20Lider";
 
-  const scrollToConsultation = () => {
+  const scrollToConsultation = (location = 'header') => {
+    trackCtaClick('consultation_scroll', location);
     const element = document.getElementById("consultation");
     element?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
@@ -51,7 +53,7 @@ export default function PublicLayout() {
               </Link>
               <a
                 href={phoneContacts[1].href}
-                onClick={() => trackContactClick("phone", "header")}
+                onClick={() => trackContactClick("phone", "header", getAttributionPayload())}
                 className="hidden lg:inline-flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"
               >
                 <Phone size={16} />
@@ -61,14 +63,14 @@ export default function PublicLayout() {
                 href={whatsappHref}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => trackContactClick("whatsapp", "header")}
+                onClick={() => trackContactClick("whatsapp", "header", getAttributionPayload())}
                 className="hidden lg:inline-flex items-center gap-2 text-sm text-green-700 hover:text-green-800 transition"
               >
                 <MessageCircle size={16} />
                 WhatsApp
               </a>
               <button
-                onClick={scrollToConsultation}
+                onClick={() => scrollToConsultation('header')}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
               >
                 Получить консультацию
@@ -131,7 +133,7 @@ export default function PublicLayout() {
                 href={phoneContacts[1].href}
                 className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition"
                 onClick={() => {
-                  trackContactClick("phone", "mobile_menu");
+                  trackContactClick("phone", "mobile_menu", getAttributionPayload());
                   setMobileMenuOpen(false);
                 }}
               >
@@ -144,7 +146,7 @@ export default function PublicLayout() {
                 rel="noreferrer"
                 className="flex items-center gap-2 text-green-700 hover:text-green-800 transition"
                 onClick={() => {
-                  trackContactClick("whatsapp", "mobile_menu");
+                  trackContactClick("whatsapp", "mobile_menu", getAttributionPayload());
                   setMobileMenuOpen(false);
                 }}
               >
@@ -152,7 +154,7 @@ export default function PublicLayout() {
                 Написать в WhatsApp
               </a>
               <button
-                onClick={scrollToConsultation}
+                onClick={() => scrollToConsultation('mobile_menu')}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition w-full"
               >
                 Получить консультацию
@@ -229,7 +231,7 @@ export default function PublicLayout() {
                   <a
                     key={phone.href}
                     href={phone.href}
-                    onClick={() => trackContactClick("phone", "footer")}
+                    onClick={() => trackContactClick("phone", "footer", getAttributionPayload())}
                     className="block hover:text-white transition"
                   >
                     {phone.label}
@@ -237,7 +239,7 @@ export default function PublicLayout() {
                 ))}
                 <a
                   href="mailto:info@hr-lider.kz"
-                  onClick={() => trackContactClick("email", "footer")}
+                  onClick={() => trackContactClick("email", "footer", getAttributionPayload())}
                   className="block hover:text-white transition"
                 >
                   info@hr-lider.kz
@@ -256,7 +258,7 @@ export default function PublicLayout() {
         target="_blank"
         rel="noreferrer"
         aria-label="Написать HR Lider в WhatsApp"
-        onClick={() => trackContactClick("whatsapp", "floating")}
+        onClick={() => trackContactClick("whatsapp", "floating", getAttributionPayload())}
         className="fixed bottom-5 right-5 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-600 text-white shadow-lg transition hover:bg-green-700 md:hidden"
       >
         <MessageCircle size={26} />

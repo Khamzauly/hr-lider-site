@@ -6,7 +6,10 @@ import {
 
 export default function AnalyticsScripts() {
   const gaScripts = buildGoogleAnalyticsScripts(
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID,
+    process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID ||
+      process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ||
+      process.env.NEXT_PUBLIC_GOOGLE_ADS_TAG_ID
   );
   const clarityScript = buildMicrosoftClarityScript(
     process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || process.env.NEXT_PUBLIC_MICROSOFT_CLARITY_ID
