@@ -2,7 +2,7 @@ import { cleanAttribution, appendAttributionToComment, buildTrackedSource, forma
 import { fail, ok, readJson } from '../../../lib/http.js';
 import { prisma } from '../../../lib/prisma.js';
 import { safeSendTelegramMessage, escapeMarkdown, telegramDeliveryStatus } from '../../../lib/telegram.js';
-import { cleanOptionalString, isSpamTrapFilled, validatePhone } from '../../../lib/validation.js';
+import { cleanOptionalString, cleanString, isSpamTrapFilled, validatePhone } from '../../../lib/validation.js';
 
 export async function POST(req) {
   try {
